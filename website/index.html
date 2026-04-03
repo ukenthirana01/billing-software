@@ -44,10 +44,10 @@
                     <span class="font-bold text-2xl tracking-tight text-gray-900">Relyce Book</span>
                 </div>
                 <div>
-                    <a href="https://github.com/ukenthirana01/billing-software/releases/latest/download/Relyce-Book-Setup.exe" 
+                    <button onclick="downloadApp()"
                        class="inline-flex items-center justify-center px-6 py-2.5 border border-transparent text-sm font-semibold rounded-full shadow-sm text-white bg-primary-600 hover:bg-primary-700 transition shadow-primary-500/30 gap-2">
                         <i class="bi bi-download"></i> Download Windows App
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
@@ -76,10 +76,10 @@
             </p>
             
             <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <a href="https://github.com/ukenthirana01/billing-software/releases/latest/download/Relyce-Book-Setup.exe" 
+                <button onclick="downloadApp()"
                    class="inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-bold rounded-2xl shadow-xl text-white bg-primary-600 hover:bg-primary-700 hover:shadow-primary-500/40 hover:-translate-y-0.5 transition-all gap-3">
                     <i class="bi bi-windows text-2xl"></i> Download for Windows
-                </a>
+                </button>
             </div>
             <p class="mt-4 text-sm text-gray-500 flex items-center justify-center gap-2">
                 <i class="bi bi-shield-check text-green-500"></i> Free, secure, and always auto-updates to the latest version.
@@ -170,10 +170,10 @@
             <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">Ready to transform your billing?</h2>
             <p class="mx-auto mt-6 max-w-xl text-lg leading-8 text-primary-100">Relyce Book is light-weight, incredibly fast, and permanently offline-first.</p>
             <div class="mt-10 flex items-center justify-center box-border">
-                <a href="https://github.com/ukenthirana01/billing-software/releases/latest/download/Relyce-Book-Setup.exe" 
+                <button onclick="downloadApp()"
                    class="inline-flex items-center justify-center px-8 py-4 text-base font-bold text-primary-900 bg-white rounded-2xl shadow-lg hover:bg-gray-50 transition transform hover:-translate-y-1 gap-3 w-full sm:w-auto">
                     <i class="bi bi-cloud-arrow-down-fill text-2xl"></i> Get Relyce Book 1.0.2
-                </a>
+                </button>
             </div>
             <p class="mt-4 text-primary-200 text-sm">Windows 10 / 11 64-bit • Auto-updates enabled</p>
         </div>
@@ -189,5 +189,10 @@
         </div>
     </footer>
 
+    <script>
+        function downloadApp() {
+            window.location.href = "https://github.com/ukenthirana01/billing-software/releases/latest/download/Relyce-Book-Setup.exe";
+        }
+    </script>
 </body>
 </html>
