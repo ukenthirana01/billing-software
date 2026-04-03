@@ -754,46 +754,60 @@ If the machine has zero internet connectivity, updates remain extremely simple:
 
 ## How to Push Continuous Updates to Installed Apps
 
-The software is configured to use the **Generic Web Server** approach for auto-updates. This means you do not need GitHub; you only need a basic web hosting server (like your own website domain) to host the update files. 
+The software is configured to use the **GitHub Releases** approach for auto-updates with **Differential Updates**. This means the application only downloads the changed files rather than the entire installer.
 
-When a customer's PC connects to the internet and clicks "Check for Updates," the app will automatically download the new version from your server. Here is the step-by-step guide to publishing an update:
+When a customer's PC connects to the internet and launches the app, it will automatically check for updates against your configured GitHub remote. Here is the step-by-step guide to publishing an update:
 
-### Step 1: Configure Your Server URL
-In the `package.json` file, locate the `build.publish` section. Replace `"https://your-domain.com/downloads"` with the actual URL of the folder on your web host where you will upload the updates:
-```json
-"publish": [
-  {
-    "provider": "generic",
-    "url": "https://www.your-actual-website.com/billing-updates"
-  }
-]
+### Step 1: Push Code to GitHub
+Ensure your code is pushed to your remote repository on GitHub:
+```bash
+git push origin main
 ```
 
 ### Step 2: Bump the Version Number
-When you have finished making bug fixes or adding new features in the code, open `package.json` and increase the `"version"` number. 
-*Example: Change `"1.0.0"` to `"1.0.1"`.*
+When you have finished making bug fixes or adding new features in the code, open `package.json` and increment the `"version"` number. 
+*Example: Change `"1.0.1"` to `"1.0.2"`.*
+*(Note: If you do not change the version number, the auto-updater will not trigger update prompts for the end-users).*
 
-### Step 3: Build the New Release
-Open your terminal and run the build command:
-```bash
-npm run build
+### Step 3: Provide a GitHub Token
+Publishing to GitHub requires authorization. Set the `GH_TOKEN` environment variable in your terminal using a Personal Access Token (classic) with the **repo** scope.
+```powershell
+$env:GH_TOKEN="ghp_your_copied_token_here"
 ```
-This will generate the new installer files inside the `dist/` folder. The critical files generated are:
-1. **`Relyce Book Setup 1.0.1.exe`** (The actual installer)
-2. **`latest.yml`** (A tiny text file containing the new version info and file hashes)
 
-### Step 4: Upload to Your Web Server
-Using cPanel, FTP, or your hosting provider's file manager, upload **BOTH** of the generated files to the folder on your server that matches the `url` you set in Step 1.
+### Step 4: Build and Publish the Release
+In the same terminal where your token is set, run the build command configured to publish:
+```bash
+npx electron-builder --publish always
+```
+This automatically builds the `.exe`, generates the `.blockmap` file (which enables differential, partial-file updates), and uploads them as a new Release exactly in your GitHub repository.
 
 ### Step 5: Customers Receive the Update
-Once uploaded, any installed application across all your clients will do the following:
-1. They go to **Settings > Updates** and click **Check for Updates**.
-2. The app fetches `latest.yml` from your server and compares the version.
-3. Because `1.0.1` is greater than their current `1.0.0`, it displays the update.
-4. The user clicks **Download Update**, the app silently downloads the `.exe` into the background, and then prompts them to **Quit and Install**. 
-5. The app automatically restarts into the updated version, keeping all database and local data intact.
+Once the release is published, any installed application across all your clients will do the following:
+1. Every time they launch the application, it checks the latest GitHub Release silently.
+2. Because `1.0.2` is greater than their current version, it detects an update.
+3. The app fetches the `.blockmap` and silently downloads **only the changed data** in the background.
+4. Once downloaded, it prompts the user with a dialog: "New version downloaded. Restart now to install?".
+5. If the user clicks **Yes**, the app automatically quits, applies the update, and restarts smoothly, keeping all database and local configuration fully intact.
 
 *Note: You repeat Steps 2, 3, and 4 every time you want to deploy a new version to your customers.*
+
+### Option B — PRO METHOD (Recommended Website Integration)
+To give your users a static, permanent download link on your website that **always downloads the newest version automatically** straight from GitHub, use the following URL on your Download buttons:
+
+**`https://github.com/ukenthirana01/billing-software/releases/latest/download/Relyce-Book-Setup.exe`**
+
+#### Final Professional Flow
+1. **Your Website:** User goes to your website and clicks "Download".
+2. **Direct EXE Download:** The link above immediately serves the absolute newest `.exe` without ever showing them GitHub directly.
+3. **Install Once:** They install Relyce Book locally on their machine.
+4. **App Auto Updates:** The internal `electron-updater` triggers silently in the background whenever an update is available online. Users **NEVER** need to manually download updates again.
+
+### Professional In-App Update UI
+To provide a world-class user experience safely removed from ugly OS alerts, the auto-update pipeline is securely piped directly into the DOM:
+- **`main.js`**: Native blocking `dialog` popups have been removed. The updater checks silently on startup and emits `update_available` and `update_downloaded` IPC events down to the frontend window.
+- **`preload.js`**: `window.updater` ContextBridge handles safe, structured IPC delivery for available updates and update installation commands.
+- **`index.html`**: A visually stunning, non-blocking HTML popup slides up in the bottom right corner when an update begins. It automatically switches states from **Downloading...** to **Restart & Update Now** as the `.blockmap` differential installation prepares the new version.
 
 ---
 

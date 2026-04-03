@@ -184,30 +184,27 @@ app.whenReady().then(() => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
 
-  autoUpdater.checkForUpdatesAndNotify();
+  autoUpdater.checkForUpdates();
 });
 
-// When update is found
+// Send Events to UI
 autoUpdater.on("update-available", () => {
-  console.log("Update available...");
-});
-
-autoUpdater.on("download-progress", (progress) => {
-  console.log(`Download progress: ${progress.percent}%`);
-});
-
-// When update is downloaded
-autoUpdater.on("update-downloaded", () => {
-  const result = dialog.showMessageBoxSync({
-    type: "info",
-    title: "Update Ready",
-    message: "New version downloaded. Restart now to install?",
-    buttons: ["Yes", "Later"]
-  });
-
-  if (result === 0) {
-    autoUpdater.quitAndInstall();
+  const allWindows = BrowserWindow.getAllWindows();
+  if (allWindows.length > 0) {
+    allWindows[0].webContents.send("update_available");
   }
+});
+
+autoUpdater.on("update-downloaded", () => {
+  const allWindows = BrowserWindow.getAllWindows();
+  if (allWindows.length > 0) {
+    allWindows[0].webContents.send("update_downloaded");
+  }
+});
+
+// Install Update When User Clicks
+ipcMain.on("install_update", () => {
+  autoUpdater.quitAndInstall();
 });
 
 app.on('window-all-closed', () => {

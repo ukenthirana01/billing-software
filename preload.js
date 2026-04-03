@@ -204,3 +204,9 @@ contextBridge.exposeInMainWorld('api', {
     onError: (cb) => ipcRenderer.on('updater:error', (_, e) => cb(e)),
   },
 });
+
+contextBridge.exposeInMainWorld("updater", {
+  onUpdateAvailable: (callback) => ipcRenderer.on("update_available", callback),
+  onUpdateDownloaded: (callback) => ipcRenderer.on("update_downloaded", callback),
+  installUpdate: () => ipcRenderer.send("install_update")
+});

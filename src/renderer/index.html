@@ -234,5 +234,70 @@
   <script src="../../node_modules/xlsx/dist/xlsx.full.min.js"></script>
   <script src="../../node_modules/tesseract.js/dist/tesseract.min.js"></script>
   <script src="js/app.js"></script>
+
+  <!-- Auto-Update Professional Popup -->
+  <div id="updateBox" style="
+    display: none;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: var(--white);
+    color: var(--gray-900);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    z-index: 10000;
+    border: 1px solid var(--gray-200);
+    min-width: 300px;
+    animation: slideUp 0.3s ease-out;
+  ">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <i class="bi bi-cloud-arrow-down-fill" style="color: var(--primary-600); font-size: 20px;"></i>
+        <h4 style="margin: 0; font-size: 15px; font-weight: 600;">Software Update</h4>
+      </div>
+    </div>
+    <p id="updateText" style="margin: 0 0 15px 0; font-size: 13px; color: var(--gray-600);">Update Available. Downloading...</p>
+    <button onclick="installUpdate()" id="updateBtn" class="btn btn-primary w-full" disabled style="opacity: 0.7;">
+      Downloading...
+    </button>
+  </div>
+
+  <style>
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+
+  <script>
+    const box = document.getElementById("updateBox");
+    const text = document.getElementById("updateText");
+    const btn = document.getElementById("updateBtn");
+
+    if (window.updater) {
+      window.updater.onUpdateAvailable(() => {
+        box.style.display = "block";
+        text.innerText = "Downloading the latest version...";
+        btn.disabled = true;
+        btn.style.opacity = "0.7";
+        btn.innerText = "Downloading...";
+      });
+
+      window.updater.onUpdateDownloaded(() => {
+        box.style.display = "block";
+        text.innerText = "Update Ready! Restart to apply.";
+        btn.disabled = false;
+        btn.style.opacity = "1";
+        btn.innerText = "Restart & Update Now";
+      });
+    }
+
+    function installUpdate() {
+      if (window.updater) {
+        window.updater.installUpdate();
+      }
+    }
+  </script>
 </body>
 </html>

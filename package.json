@@ -1,6 +1,6 @@
 {
   "name": "relyce-book",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Relyce Book - Indian GST Offline Billing System",
   "main": "main.js",
   "scripts": {
@@ -12,9 +12,10 @@
   "build": {
     "appId": "com.relyce.book",
     "productName": "Relyce Book",
+    "artifactName": "Relyce-Book-Setup.${ext}",
     "win": {
       "target": "nsis",
-      "icon": "assets/relyce_logo.ico",
+      "icon": "assets/relyce_book.png",
       "signAndEditExecutable": false
     },
     "nsis": {
