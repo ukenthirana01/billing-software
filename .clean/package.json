@@ -1,0 +1,51 @@
+{
+  "name": "relyce-book",
+  "version": "1.0.0",
+  "description": "Relyce Book - Indian GST Offline Billing System",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "rebuild": "electron-rebuild -f -w better-sqlite3",
+    "build": "electron-builder"
+  },
+  "build": {
+    "appId": "com.msbilling.software",
+    "productName": "Relyce Book",
+    "win": {
+      "target": "nsis",
+      "icon": "assets/relyce-book.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "src/**/*",
+      "assets/**/*",
+      "node_modules/**/*"
+    ]
+  },
+  "keywords": [
+    "billing",
+    "gst",
+    "invoice",
+    "accounting",
+    "india"
+  ],
+  "author": "Relyce Book",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1",
+    "electron-rebuild": "^3.2.9"
+  },
+  "dependencies": {
+    "better-sqlite3": "^9.4.3",
+    "bootstrap-icons": "^1.13.1",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.8.1",
+    "xlsx": "^0.18.5"
+  }
+}

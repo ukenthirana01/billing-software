@@ -1,0 +1,9 @@
+node_modules/
+dist/
+dist_obfuscated/
+.DS_Store
+*.db
+*.sqlite
+*.sqlite3
+*.log
+.env

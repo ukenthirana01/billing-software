@@ -1,0 +1,49 @@
+﻿name: Update Latest Manifest
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  update-manifest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Generate latest.json From Release
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const release = context.payload.release;
+            const tagName = String(release.tag_name || '').trim();
+            const version = tagName.startsWith('v') ? tagName.slice(1) : tagName;
+
+            const exeAsset = (release.assets || []).find((a) =>
+              String(a.name || '').toLowerCase().endsWith('.exe')
+            );
+
+            const manifest = {
+              version,
+              notes: String(release.body || '').trim(),
+              published_at: new Date(release.published_at || Date.now()).toISOString().slice(0, 10),
+              download_url: exeAsset ? exeAsset.browser_download_url : '',
+              mandatory: false
+            };
+
+            fs.writeFileSync('latest.json', JSON.stringify(manifest, null, 2) + '\n', 'utf8');
+
+      - name: Commit latest.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add latest.json
+          git diff --cached --quiet || git commit -m "chore: update latest.json for ${{ github.event.release.tag_name }}"
+          git push origin HEAD:main

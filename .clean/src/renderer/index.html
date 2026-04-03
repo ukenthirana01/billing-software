@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Relyce Book</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- Bootstrap Icons (local, offline-safe) -->
+  <link rel="stylesheet" href="../../node_modules/bootstrap-icons/font/bootstrap-icons.css" />
+</head>
+<body>
+  <!-- Setup Screen (shown on first run) -->
+  <div id="setup-screen" class="hidden"></div>
+
+  <!-- Login Screen -->
+  <div id="login-screen" class="hidden"></div>
+  
+  <!-- Main App Shell -->
+  <div id="app-shell" class="hidden">
+    <!-- Sidebar -->
+    <aside id="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon">₹</div>
+        <div class="brand-text">
+          <span class="brand-name">Relyce Book</span>
+          <span class="brand-sub">Software v1.1</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">MAIN</div>
+        <a class="nav-item active" data-page="dashboard">
+          <i class="bi bi-grid-1x2-fill nav-icon"></i><span>Dashboard</span>
+        </a>
+
+        <div class="nav-section-label">TRANSACTIONS</div>
+        <a class="nav-item" data-page="daily-funds">
+          <i class="bi bi-wallet2 nav-icon"></i><span>Daybook</span>
+        </a>
+        <a class="nav-item" data-page="sales">
+          <i class="bi bi-receipt nav-icon"></i><span>Sales / Billing</span>
+        </a>
+        <a class="nav-item" data-page="purchase">
+          <i class="bi bi-cart3 nav-icon"></i><span>Purchase</span>
+        </a>
+        <a class="nav-item" data-page="quotation">
+          <i class="bi bi-file-earmark-text nav-icon"></i><span>Quotation</span>
+        </a>
+        <a class="nav-item" data-page="credit-note">
+          <i class="bi bi-arrow-return-left nav-icon"></i><span>Credit Note</span>
+        </a>
+        <a class="nav-item" data-page="debit-note">
+          <i class="bi bi-arrow-return-right nav-icon"></i><span>Debit Note</span>
+        </a>
+        <a class="nav-item" data-page="delivery-note">
+          <i class="bi bi-truck nav-icon"></i><span>Delivery Note</span>
+        </a>
+
+        <div class="nav-section-label">MASTERS</div>
+        <a class="nav-item" data-page="customers">
+          <i class="bi bi-people-fill nav-icon"></i><span>Customers</span>
+        </a>
+        <a class="nav-item" data-page="suppliers">
+          <i class="bi bi-building nav-icon"></i><span>Suppliers</span>
+        </a>
+        <a class="nav-item" data-page="products">
+          <i class="bi bi-box-seam nav-icon"></i><span>Products</span>
+        </a>
+        <a class="nav-item" data-page="ledger">
+          <i class="bi bi-journal-bookmark-fill nav-icon"></i><span>Ledger</span>
+        </a>
+
+        <div class="nav-section-label">REPORTS</div>
+        <a class="nav-item" data-page="stock">
+          <i class="bi bi-bar-chart-fill nav-icon"></i><span>Stock</span>
+        </a>
+        <a class="nav-item" data-page="reports">
+          <i class="bi bi-graph-up-arrow nav-icon"></i><span>Reports</span>
+        </a>
+
+        <div class="nav-section-label">ADMIN</div>
+        <a class="nav-item" data-page="settings">
+          <i class="bi bi-gear-fill nav-icon"></i><span>Settings</span>
+        </a>
+        <a class="nav-item" data-page="users">
+          <i class="bi bi-person-fill nav-icon"></i><span>Users</span>
+        </a>
+        <a class="nav-item" data-page="backup">
+          <i class="bi bi-database-fill nav-icon"></i><span>Backup</span>
+        </a>
+        <a class="nav-item" data-page="logs">
+          <i class="bi bi-clock-history nav-icon"></i><span>Activity Log</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-info">
+          <div class="user-avatar" id="user-avatar">A</div>
+          <div>
+            <div class="user-name" id="user-name">Admin</div>
+            <div class="user-role" id="user-role">Administrator</div>
+          </div>
+        </div>
+        <button class="btn-logout" id="btn-logout" title="Logout">
+          <i class="bi bi-power"></i>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main id="main-content">
+      <!-- Top Bar -->
+      <div class="topbar">
+        <div class="topbar-left">
+          <button id="toggle-sidebar" class="toggle-btn"><i class="bi bi-list"></i></button>
+          <h1 class="page-title" id="page-title">Dashboard</h1>
+        </div>
+        <div class="topbar-right">
+          <div class="company-name" id="topbar-company">
+            <i class="bi bi-building" style="margin-right:5px"></i>Relyce Book
+          </div>
+          <div class="date-display" id="date-display">
+            <i class="bi bi-calendar3" style="margin-right:4px"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Page Content Area -->
+      <div id="page-content">
+        <!-- Pages injected here dynamically -->
+      </div>
+    </main>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast-container"></div>
+
+  <!-- Modal Overlay -->
+  <div id="modal-overlay" class="hidden">
+    <div id="modal-box"></div>
+  </div>
+
+  <!-- Confirm Modal Overlay -->
+  <div id="confirm-modal-overlay" class="hidden">
+    <div class="confirm-box">
+      <div class="confirm-icon"><i class="bi bi-exclamation-triangle"></i></div>
+      <h3 class="confirm-title" id="confirm-title">Are you sure?</h3>
+      <p class="confirm-text" id="confirm-text">This action cannot be undone.</p>
+      <div class="confirm-actions">
+        <button class="btn btn-secondary" id="confirm-btn-cancel">Cancel</button>
+        <button class="btn btn-danger" id="confirm-btn-ok">Yes, proceed</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../../node_modules/jspdf/dist/jspdf.umd.min.js"></script>
+  <script src="../../node_modules/jspdf-autotable/dist/jspdf.plugin.autotable.min.js"></script>
+  <script src="../../node_modules/xlsx/dist/xlsx.full.min.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

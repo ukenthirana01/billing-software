@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Relyce Book</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- Bootstrap Icons (local, offline-safe) -->
+  <link rel="stylesheet" href="../../node_modules/bootstrap-icons/font/bootstrap-icons.css" />
+</head>
+<body>
+  <!-- Company Selection Screen -->
+  <div id="company-selection-screen" class="hidden"></div>
+
+  <!-- Setup Screen (shown on first run) -->
+  <div id="setup-screen" class="hidden"></div>
+
+  <!-- Login Screen -->
+  <div id="login-screen" class="hidden" aria-hidden="true">
+    <div class="login-card" role="dialog" aria-modal="true" aria-labelledby="login-title">
+      <div class="login-header">
+        <div class="login-logo-icon" aria-hidden="true">
+          <i class="bi bi-person-badge"></i>
+        </div>
+        <h2 id="login-title" class="login-title">Welcome Back</h2>
+        <p class="login-subtitle">Please sign in to access your workspace</p>
+      </div>
+
+      <form id="login-form" onsubmit="window.authenticateUser(event)" novalidate>
+        <div class="login-fields">
+          <div class="login-field">
+            <label for="login-username" class="form-label">Username</label>
+            <div class="login-input-wrap" id="login-username-wrap">
+              <i class="bi bi-person login-input-icon" aria-hidden="true"></i>
+              <input type="text" id="login-username" required autocomplete="username" placeholder="Enter username" class="login-input" />
+            </div>
+            <div id="login-username-error" class="field-error hidden" role="alert" aria-live="polite"></div>
+          </div>
+
+          <div class="login-field">
+            <label for="login-password" class="form-label">Password</label>
+            <div class="login-input-wrap login-input-wrap-password" id="login-password-wrap">
+              <i class="bi bi-lock login-input-icon" aria-hidden="true"></i>
+              <input type="password" id="login-password" required autocomplete="current-password" placeholder="Enter password" class="login-input" />
+              <button type="button" id="toggle-login-password" class="login-password-toggle" aria-label="Show password" aria-pressed="false" tabindex="-1">
+                <i class="bi bi-eye" aria-hidden="true"></i>
+              </button>
+            </div>
+            <div id="login-password-error" class="field-error hidden" role="alert" aria-live="polite"></div>
+            <div id="login-capslock-hint" class="login-hint hidden">Caps Lock is on.</div>
+          </div>
+        </div>
+
+        <div id="login-form-error" class="login-form-error hidden" role="alert" aria-live="polite"></div>
+
+        <button type="submit" id="login-submit-btn" class="login-submit-btn">
+          <span id="login-submit-text">Secure Login</span>
+          <span class="login-btn-spinner hidden" id="login-submit-spinner" aria-hidden="true"></span>
+        </button>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Main App Shell -->
+  <div id="app-shell" class="hidden">
+    <!-- Sidebar -->
+    <aside id="sidebar">
+      <div class="sidebar-brand">
+        <img src="../../assets/relyce_book.png" alt="Relyce Book" class="brand-icon-img" />
+        <div class="brand-text">
+          <span class="brand-name">Relyce Book</span>
+          <span class="brand-sub">Software v1.1</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">MAIN</div>
+        <a class="nav-item active" data-page="dashboard">
+          <i class="bi bi-grid-1x2-fill nav-icon"></i><span>Dashboard</span>
+        </a>
+
+        <div class="nav-section-label admin-only">TRANSACTIONS</div>
+        <a class="nav-item admin-only" data-page="daily-funds">
+          <i class="bi bi-wallet2 nav-icon"></i><span>Daybook</span>
+        </a>
+        <a class="nav-item" data-page="sales">
+          <i class="bi bi-receipt nav-icon"></i><span>Sales / Billing</span>
+        </a>
+        <a class="nav-item" data-page="purchase">
+          <i class="bi bi-cart3 nav-icon"></i><span>Purchase</span>
+        </a>
+        <a class="nav-item" data-page="quotation">
+          <i class="bi bi-file-earmark-text nav-icon"></i><span>Quotation</span>
+        </a>
+        <a class="nav-item" data-page="credit-note">
+          <i class="bi bi-arrow-return-left nav-icon"></i><span>Credit Note</span>
+        </a>
+        <a class="nav-item" data-page="debit-note">
+          <i class="bi bi-arrow-return-right nav-icon"></i><span>Debit Note</span>
+        </a>
+        <a class="nav-item" data-page="delivery-note">
+          <i class="bi bi-truck nav-icon"></i><span>Delivery Note</span>
+        </a>
+        <a class="nav-item" data-page="proforma">
+          <i class="bi bi-file-earmark-check nav-icon"></i><span>Proforma Invoice</span>
+        </a>
+        <a class="nav-item" data-page="purchase-order">
+          <i class="bi bi-clipboard-check nav-icon"></i><span>Purchase Order</span>
+        </a>
+
+        <div class="nav-section-label">MASTERS</div>
+        <a class="nav-item" data-page="customers">
+          <i class="bi bi-people-fill nav-icon"></i><span>Customers</span>
+        </a>
+        <a class="nav-item" data-page="suppliers">
+          <i class="bi bi-building nav-icon"></i><span>Suppliers</span>
+        </a>
+        <a class="nav-item" data-page="products">
+          <i class="bi bi-box-seam nav-icon"></i><span>Products</span>
+        </a>
+        <a class="nav-item" data-page="qr-labels">
+          <i class="bi bi-upc-scan nav-icon"></i><span>QR / Barcode Labels</span>
+        </a>
+        <a class="nav-item admin-only" data-page="ledger">
+          <i class="bi bi-journal-bookmark-fill nav-icon"></i><span>Ledger</span>
+        </a>
+
+        <div class="nav-section-label">REPORTS</div>
+        <a class="nav-item" data-page="stock">
+          <i class="bi bi-bar-chart-fill nav-icon"></i><span>Stock</span>
+        </a>
+        <a class="nav-item admin-only" data-page="reports">
+          <i class="bi bi-graph-up-arrow nav-icon"></i><span>Reports</span>
+        </a>
+
+        <div class="nav-section-label admin-only">ADMIN</div>
+        <a class="nav-item admin-only" data-page="settings">
+          <i class="bi bi-gear-fill nav-icon"></i><span>Settings</span>
+        </a>
+        <a class="nav-item admin-only" data-page="users">
+          <i class="bi bi-person-fill nav-icon"></i><span>Users</span>
+        </a>
+        <a class="nav-item admin-only" data-page="backup">
+          <i class="bi bi-database-fill nav-icon"></i><span>Backup</span>
+        </a>
+        <a class="nav-item admin-only" data-page="logs">
+          <i class="bi bi-clock-history nav-icon"></i><span>Activity Log</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-info">
+          <div class="user-avatar" id="user-avatar">A</div>
+          <div>
+            <div class="user-name" id="user-name">Admin</div>
+            <div class="user-role" id="user-role">Administrator</div>
+          </div>
+        </div>
+        <button class="btn-logout" id="btn-logout" title="Logout">
+          <i class="bi bi-power"></i>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main id="main-content">
+      <!-- Top Bar -->
+      <div class="topbar">
+        <div class="topbar-left">
+          <button id="toggle-sidebar" class="toggle-btn"><i class="bi bi-list"></i></button>
+          <h1 class="page-title" id="page-title">Dashboard</h1>
+          <div class="search-bar" style="margin-left: 20px;">
+            <input id="global-search" type="text" placeholder="Search (F2)..." autocomplete="off" />
+            <div id="global-search-results" class="search-suggestions hidden"></div>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button id="dark-mode-toggle" class="toggle-btn" title="Toggle Dark Mode">
+            <i class="bi bi-moon-fill"></i>
+          </button>
+          <div class="company-name" id="topbar-company">
+            <i class="bi bi-building" style="margin-right:5px"></i>Relyce Book
+          </div>
+          <div class="date-display" id="date-display">
+            <i class="bi bi-calendar3" style="margin-right:4px"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Page Content Area -->
+      <div id="page-content">
+        <!-- Pages injected here dynamically -->
+      </div>
+    </main>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast-container"></div>
+
+  <!-- Modal Overlay -->
+  <div id="modal-overlay" class="hidden">
+    <div id="modal-box"></div>
+  </div>
+
+  <!-- Confirm Modal Overlay -->
+  <div id="confirm-modal-overlay" class="hidden">
+    <div class="confirm-box">
+      <div class="confirm-icon"><i class="bi bi-exclamation-triangle"></i></div>
+      <h3 class="confirm-title" id="confirm-title">Are you sure?</h3>
+      <p class="confirm-text" id="confirm-text">This action cannot be undone.</p>
+      <div class="confirm-actions">
+        <button class="btn btn-secondary" id="confirm-btn-cancel">Cancel</button>
+        <button class="btn btn-danger" id="confirm-btn-ok">Yes, proceed</button>
+      </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Lock Screen Overlay -->
+  <div id="lock-screen-overlay" class="hidden" style="position: fixed; inset: 0; background: rgba(15,21,32,0.95); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(10px);">
+    <div style="background: var(--white); padding: 40px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); text-align: center; width: 340px;">
+      <i class="bi bi-lock-fill" style="font-size: 48px; color: var(--primary-600); margin-bottom: 20px; display: block;"></i>
+      <h2 style="margin-bottom: 5px; color: var(--gray-900);">Session Locked</h2>
+      <p style="color: var(--gray-500); margin-bottom: 24px; font-size: 13px;" id="lock-screen-user">Admin</p>
+      <input type="password" id="lock-password" class="form-control" placeholder="Enter password to unlock" style="margin-bottom: 15px; text-align: center; font-size: 16px; padding: 12px;" />
+      <button id="unlock-btn" class="btn btn-primary w-full" style="justify-content: center; padding: 12px; font-size: 15px;">Unlock</button>
+      <p id="lock-error" class="text-danger mt-2 text-sm hidden">Incorrect password</p>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../../node_modules/jspdf/dist/jspdf.umd.min.js"></script>
+  <script src="../../node_modules/jspdf-autotable/dist/jspdf.plugin.autotable.min.js"></script>
+  <script src="../../node_modules/xlsx/dist/xlsx.full.min.js"></script>
+  <script src="../../node_modules/tesseract.js/dist/tesseract.min.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
